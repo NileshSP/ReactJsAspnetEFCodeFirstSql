@@ -8,13 +8,13 @@ Project showcases React.js frontend UI built with Typescript to consume data fro
 
 Pre-requisites:
 
->1. [.Net Core 2.1 SDK](https://www.microsoft.com/net/download/dotnet-core/2.1)
+>1. [.Net Core 2.2 SDK](https://www.microsoft.com/net/download/dotnet-core/2.2)
 >2. [Visual Studio Code](https://code.visualstudio.com/) or [Visual Studio Community editon version 15.9.1](https://visualstudio.microsoft.com/vs/community/) or later (recommended) editor
 
 <br/>
 
 Clone the current repository locally as
- `git clone https://github.com/NileshSP/ReactJsAspnet.git`
+ `git clone https://github.com/NileshSP/ReactJsAspnetEFCodeFirstSql.git`
 
 <br/>
 
@@ -42,7 +42,7 @@ Once the project is build and run, a browser page would be presented with defaul
 4. Websites data <- `contains functionality related to data access from sql database`
 
 
-![alt text](https://github.com/NileshSP/ReactJsAspnet/blob/master/screenshot.gif "Working example..")
+![alt text](https://github.com/NileshSP/ReactJsAspnetEFCodeFirstSql/blob/master/screenshot.gif "Working example..")
 <br/>
 
 # Root folder contents: 
