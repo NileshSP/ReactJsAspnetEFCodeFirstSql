@@ -1,6 +1,6 @@
-# React.Js, .Net Core(2.2) Web Api Sql DB using Entity Framework code first 
+# React.Js, .Net Core(2.2) Web Api using Entity Framework code first interfacing In-memory/MS-Sql db 
 
-Project showcases React.js frontend UI built with Typescript to consume data from the sql database which communicates using .Net Core by exposing Web Api endpoints (for Json output) supplemented by entity framework scaffolded models from database(assuming database already existed)
+Project showcases React.js frontend UI consuming data from the i-memory/sql database which communicates using .Net Core by exposing Web Api endpoints (for Json output) supplemented by entity framework scaffolded models
 
 <br/>
 
@@ -36,10 +36,9 @@ Steps: using Visual Studio community edition editor
 
 Once the project is build and run, a browser page would be presented with default page and  navigation options on the left as 
 
-1. Home 
-2. Counter 
-3. Fetch data 
-4. Websites data <- `contains functionality related to data access from sql database`
+                                          1. Home 2. Counter 3. Fetch data 4. Websites data 
+                                                                                    ^
+                            `contains functionality related to data access from sql database`
 
 
 ![alt text](https://github.com/NileshSP/ReactJsAspnetEFCodeFirstSql/blob/master/screenshot.gif "Working example..")
