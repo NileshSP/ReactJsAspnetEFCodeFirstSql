@@ -6,9 +6,10 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
 RUN apt-get install -y nodejs
 
 COPY ./ReactJsAspnetEFSql/*.csproj ./
-RUN dotnet restore ReactJsAspnetEFSql.csproj
+#RUN dotnet restore ReactJsAspnetEFSql.csproj
 COPY ./ReactJsAspnetEFSql ./
-RUN dotnet build ReactJsAspnetEFSql.csproj -c Release --no-restore
+RUN dotnet build ReactJsAspnetEFSql.csproj -c Release 
+#--no-restore
 
 RUN dotnet publish ReactJsAspnetEFSql.csproj -c Release -o out --no-restore
 
