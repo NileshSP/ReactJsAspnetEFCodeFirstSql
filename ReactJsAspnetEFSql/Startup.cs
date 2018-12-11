@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore.InMemory;
 using ReactJsAspnetEFSql.Models;
 
 namespace ReactJsAspnetEFSql
@@ -22,7 +23,11 @@ namespace ReactJsAspnetEFSql
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebsitesContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<WebsitesContext>(options => 
+                options.UseInMemoryDatabase()                                                       // For In memory
+                //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))      //For MSSql
+
+                );
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -67,7 +72,11 @@ namespace ReactJsAspnetEFSql
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-            context.Database.Migrate();
+
+            //For MSSql
+            //context.Database.Migrate();
+
+            //Populate initial data
             ModelBuilderExtensions.SeedData(app);
         }
     }
