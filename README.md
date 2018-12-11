@@ -34,11 +34,11 @@ Steps: using Visual Studio community edition editor
 
 <br/>
 
-Once the project is build and run, a browser page would be presented with default page and  navigation options on the left as 
+Once the project is build and run, a browser page would be presented with navigation options on right as 
 
-                                          1. Home 2. Counter 3. Fetch data 4. Websites data 
-                                                                                    ^
-                            `contains functionality related to data access from sql database`
+                                                    1. Home 2. Counter 3. Fetch data 4. Websites data 
+                                                                                            ^
+                                                    `contains functionality related to data access from sql database`
 
 
 ![alt text](https://github.com/NileshSP/ReactJsAspnetEFCodeFirstSql/blob/master/screenshot.gif "Working example..")
