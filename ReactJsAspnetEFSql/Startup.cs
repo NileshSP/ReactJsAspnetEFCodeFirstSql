@@ -34,7 +34,7 @@ namespace ReactJsAspnetEFSql
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, WebsitesContext context)
         {
             if (env.IsDevelopment())
             {
@@ -67,7 +67,7 @@ namespace ReactJsAspnetEFSql
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
-
+            context.Database.Migrate();
             ModelBuilderExtensions.SeedData(app);
         }
     }
