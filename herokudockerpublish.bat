@@ -33,6 +33,8 @@ call heroku container:release web -a %APP_NAME%
 ::Using container build at remote & publish
 ::On heroku.com (free hosting services) build docker container at remote(in heroku platform) and publish app
 ::add heroku.yml file in the root with required commands
-::commit git changes
+::git add heroku.yml
+::git commit -m 'added heroku file'
+::git push origin master
 ::heroku stack:set container
 ::git push -f heroku master
