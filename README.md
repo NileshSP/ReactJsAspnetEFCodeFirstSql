@@ -29,7 +29,7 @@ Steps: using Visual Studio code editor
 >1. Open the root folder of the downloaded repository 
 >2. Await until the project is ready as per the status shown in taskbar which loads required packages in the background
 >3. Open Terminal - 'Terminal -> New Terminal' and execute commands as `cd ReactJsAspnetEFSql` & `dotnet build` & `dotnet run` sequentially
-  OR
+OR
 >4. Hit -> F5 or select 'Debug -> Start Debugging' option to run the project
 
 <br/>
