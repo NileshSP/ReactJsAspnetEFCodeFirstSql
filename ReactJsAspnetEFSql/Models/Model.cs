@@ -29,11 +29,11 @@ namespace ReactJsAspnetEFSql.Models
 
                 if (context.Websites.Any())
                 {
-                    ////To truncate tables and reseed the identities -- only required few times and not always 
-                    //context.Websites.RemoveRange(context.Websites);
-                    //context.SaveChanges();
-                    //context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Websites', RESEED, 0)");
-                    //context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('WebsiteDetails', RESEED, 0)");
+                    //To truncate tables and reseed the identities -- only required few times and not always 
+                    context.Websites.RemoveRange(context.Websites);
+                    context.SaveChanges();
+                    context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Websites', RESEED, 0)");
+                    context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('WebsiteDetails', RESEED, 0)");
                 }
 
                 if (!context.Websites.Any())
@@ -52,18 +52,19 @@ namespace ReactJsAspnetEFSql.Models
         public static List<Website> getWebsites() =>
             "dotnet,webdev,visualstudio,signalr,mobiles,vscode,csharp,visualbasic,mssql,azure,xbox,surfaceproducts,fsharp,office,xamarin"
                 .Split(",")
-                .Select((s, i) => new Website { Url = "http://blogs.msdn.com/" + s.Trim() })
+                .Reverse()
+                .Select((item, index) => new Website { Url = $"http://blogs.msdn.com/{item.Trim()}" })
                 .ToList<Website>();
 
         public static List<WebsiteDetail> getWebsiteDetails(WebsitesContext context) =>
             context.Websites
                 .ToList<Website>()
-                .Select((s, i) =>
-                    Enumerable.Range(1, 10)
-                    .Select(e => new WebsiteDetail { WebsiteId = s.WebsiteId, VisitDate = DateTime.Parse("11/" + e.ToString() + "/2018"), TotalVisits = (i + 1) * e * 100, Website = s })
+                .Select((website, index) =>
+                    Enumerable.Range(-15, 30)
+                    .Select((number, enuIndex) => new WebsiteDetail { WebsiteId = website.WebsiteId, VisitDate = DateTime.Now.AddDays(number), TotalVisits = (index + 1) * (enuIndex + 1) * 100, Website = website })
                     .ToList<WebsiteDetail>()
                 )
-                .SelectMany(x => x)
+                .SelectMany(websiteDetails => websiteDetails)
                 .ToList<WebsiteDetail>();
     }
 

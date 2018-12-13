@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 export class WebsitesData extends Component {
   static displayName = WebsitesData.name;
+  static baseDataUrl = "api/Websites";
 
     constructor(props) {
         super(props);
@@ -10,25 +11,39 @@ export class WebsitesData extends Component {
             websites: []
             , loading: true
             , topNumber: 5
-            , searchDate: "2018-11-01"
+            , searchDate: ""
             , listSearchColumns: listColumns
             , searchColumns: listColumns[0]
             , currentOption: listColumns[0]
             , responseJsonColumns: []
             , errorMessage: ""
+            , minDate: ""
+            , maxDate: ""
         };
     }
 
-    async componentDidMount() { this.getDataFromDBUsingServer(); }
+    async componentDidMount() {
+        this.getMinMaxDate().then(_ => this.getDataFromDBUsingServer());
+    }
 
     setComponentState = async (stateOptions) => await this.setState({ ...this.state, ...stateOptions });
 
+    getMinMaxDate = () => {
+        return fetch(WebsitesData.baseDataUrl + "/GetMinMaxDate")
+            .then(result => result.json())
+            .then(dateResult => {
+                if (dateResult !== null) {
+                    this.setComponentState({ maxDate: dateResult.maxDate, minDate: dateResult.minDate, searchDate: dateResult.minDate });
+                }
+            })
+    }
+
     getDataFromDBUsingServer = async () => {
-        let apiOptions = "?";
+        let apiOptions = "/Index?";
         apiOptions += (this.state.searchDate.trim() !== "" ? "&searchDate=" + this.state.searchDate.trim() : "");
         apiOptions += (this.state.topNumber !== null ? "&topNumber=" + this.state.topNumber.toString() : "");
         apiOptions += (this.state.currentOption.trim() !== "" ? "&columns=WebsiteId," + this.state.currentOption.trim() : "");
-        fetch('api/Websites/Index' + apiOptions)
+        fetch(WebsitesData.baseDataUrl + apiOptions)
             .then(response => {
                 let data = response.json();
                 if (response.status === 200) {
@@ -140,7 +155,7 @@ export class WebsitesData extends Component {
     renderSearchDate = (state, setComponentState = (stateOptions) => { }) => {
         const dateChange = (event) => setComponentState({ searchDate: event.currentTarget.value });
 
-        return <input type="date" id="searchDateSelect" min="2018-11-01" max="2018-11-10"
+        return <input type="date" id="searchDateSelect" min={state.minDate} max={state.maxDate}
             value={state.searchDate}
             onChange={e => dateChange(e)}
         />
