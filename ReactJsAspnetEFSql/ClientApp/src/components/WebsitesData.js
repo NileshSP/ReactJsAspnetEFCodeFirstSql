@@ -79,7 +79,7 @@ export class WebsitesData extends Component {
     render() {
         return <div>
             <h1>Website Tracking Details</h1>
-            <p>This component demonstrates top websites by visits data from the server.</p>
+            <p>This component demonstrates data for top websites by visits from the (sql/in-memory)database.</p>
             <p>Get top&nbsp;&nbsp;
                 {this.renderTopNumber(this.state, (stateOptions) => this.setComponentState(stateOptions))}
                 &nbsp;&nbsp;websites for&nbsp;&nbsp;
