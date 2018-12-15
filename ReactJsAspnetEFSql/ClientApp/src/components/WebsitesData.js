@@ -109,7 +109,7 @@ export class WebsitesData extends Component {
         return <table className='table table-striped'>
             <thead>
                 <tr>
-                    {state.responseJsonColumns.map(s => (s.toUpperCase().trim() !== 'WEBSITEID' ? <th key={s}>{s}</th> : null))}
+                    {state.responseJsonColumns.map(column => (column.toUpperCase().trim() !== 'WEBSITEID' ? <th key={column}>{column}</th> : null))}
                 </tr>
             </thead>
             <tbody>
@@ -117,11 +117,11 @@ export class WebsitesData extends Component {
                     <tr key={website.WebsiteId}>
                         {state
                             .responseJsonColumns
-                            .map(s => (s.toUpperCase().trim() !== 'WEBSITEID'
-                                        ?   <td key={website[s]}>
-                                            {s.toUpperCase().trim() === 'VISITDATE'
-                                                ? website[s] !== undefined ? (new Date(website[s]).toLocaleDateString()) : null
-                                                : website[s]
+                            .map(column => (column.toUpperCase().trim() !== 'WEBSITEID'
+                                        ?   <td key={website[column]}>
+                                            {column.toUpperCase().trim() === 'VISITDATE'
+                                                ? website[column] !== undefined ? (new Date(website[column]).toLocaleDateString()) : null
+                                                : website[column]
                                             }
                                             </td>
                                         : null
@@ -144,9 +144,9 @@ export class WebsitesData extends Component {
             style={{ width: "45px" }}
         >
             {
-                [...Array(10).keys()].map(val => {
-                    var setVal = val+1;
-                    return <option key={setVal} value={setVal} >{setVal}</option>
+                [...Array(10).keys()].map(number => {
+                    var revisedNumber = number+1;
+                    return <option key={revisedNumber} value={revisedNumber} >{revisedNumber}</option>
                 })
             }
         </select>
@@ -171,15 +171,13 @@ export class WebsitesData extends Component {
             ref="columnsSelect"
         >
             {
-                state.listSearchColumns.map((val) => {
-                    var setVal = val;
-                    return <option key={setVal} value={setVal} >{setVal}</option>
+                state.listSearchColumns.map(item => {
+                    var revisedItem = item;
+                    return <option key={revisedItem} value={revisedItem} >{revisedItem}</option>
                 })
             }
         </select>
     }
 
-    renderSubmitButton = (getData = () => { }) => {
-        return <button id="btnSubmit" onClick={e => getData()} >View</button>;
-    }
+    renderSubmitButton = (getData = () => { }) => <button id="btnSubmit" onClick={e => getData()} >View</button>
 }
