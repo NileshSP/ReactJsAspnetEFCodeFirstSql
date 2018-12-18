@@ -10,7 +10,7 @@
            "request": "launch",
            "preLaunchTask": "build",
            // If you have changed target frameworks, make sure to update the program path.
-           "program": "${workspaceFolder}/ReactJsAspnetEFSql/bin/Debug/netcoreapp2.1/ReactJsAspnetEFSql.dll",
+           "program": "${workspaceFolder}/ReactJsAspnetEFSql/bin/Debug/netcoreapp2.2/ReactJsAspnetEFSql.dll",
            "args": [],
            "cwd": "${workspaceFolder}/ReactJsAspnetEFSql",
            "stopAtEntry": false,
