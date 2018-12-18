@@ -101,40 +101,36 @@ export class WebsitesData extends Component {
 			}
 			else {
 				if(errMsg === "") {
-				return <table className='table table-striped'>
-					<thead>
-						<tr>
-							{state.responseJsonColumns.map(column => (column.toUpperCase().trim() !== 'WEBSITEID' ? <th key={column}>{column}</th> : null))}
-						</tr>
-					</thead>
-					<tbody>
-						{websites.map(website =>
-							<tr key={website.WebsiteId}>
-								{state
-									.responseJsonColumns
-									.map(column => (column.toUpperCase().trim() !== 'WEBSITEID'
-																			? <td key={website[column]}>
-																					{column.toUpperCase().trim() === 'VISITDATE'
-																						? website[column] !== undefined ? (new Date(website[column]).toLocaleDateString()) : null
-																						: website[column]
-																					}
-																				</td>
-																			: null
-																	)
-									)
-								}
+					return <table className='table table-striped'>
+						<thead>
+							<tr>
+								{state.responseJsonColumns.map(column => (column.toUpperCase().trim() !== 'WEBSITEID' ? <th key={column}>{column}</th> : null))}
 							</tr>
-						)}
-					</tbody>
-				</table>;
+						</thead>
+						<tbody>
+							{websites.map(website =>
+								<tr key={website.WebsiteId}>
+									{state
+										.responseJsonColumns
+										.map(column => 
+													(column.toUpperCase().trim() !== 'WEBSITEID'
+															? <td key={website[column]}>
+																	{column.toUpperCase().trim() === 'VISITDATE'
+																		? website[column] !== undefined ? (new Date(website[column]).toLocaleDateString()) : null
+																		: website[column]
+																	}
+																</td>
+															: null
+													)
+										)
+									}
+								</tr>
+							)}
+						</tbody>
+					</table>;
 				}
 				else {
-					if(errMsg === "reading") {
-						return <p><em>Loading...data fetched...reading...</em></p>
-					}
-					else {
-						return <p><em>Error occured : {errMsg}</em></p>
-					}
+					return <p><em>{errMsg}</em></p>
 				}
 			}
 		}	
