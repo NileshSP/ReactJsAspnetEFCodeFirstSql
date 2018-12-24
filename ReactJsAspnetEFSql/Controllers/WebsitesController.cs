@@ -53,7 +53,7 @@ namespace ReactJsAspnetEFSql.Controllers
                                             .AsQueryable();
 
                     // eliminate columns with null values for final output
-                    var finalResult = JsonSerialize(websites, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
+                    var finalResult = JsonSerializeWithSettings(websites, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
 
                     return Ok(await Task.Run(() => finalResult));
                 }
@@ -77,23 +77,25 @@ namespace ReactJsAspnetEFSql.Controllers
                 dynamic dateObject = new JObject();
                 dateObject.minDate = _context.WebsiteDetails.Min(date => date.VisitDate.Date).ToString("yyyy-MM-dd");
                 dateObject.maxDate = _context.WebsiteDetails.Max(date => date.VisitDate.Date).ToString("yyyy-MM-dd");
-                return JsonSerialize(dateObject, new JsonSerializerSettings() { });
+                return JsonSerialize(dateObject);
             }));
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> WebsiteList() => Ok(await Task.Run(() => JsonSerialize(ModelBuilderExtensions.getWebsites(), new JsonSerializerSettings() { })));
+        public async Task<IActionResult> WebsiteList() => Ok(await Task.Run(() => JsonSerialize(ModelBuilderExtensions.getWebsites())));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> WebsiteDetailsList() => Ok(await Task.Run(() => JsonSerialize(ModelBuilderExtensions.getWebsiteDetails(_context), new JsonSerializerSettings() { })));
+        public async Task<IActionResult> WebsiteDetailsList() => Ok(await Task.Run(() => JsonSerialize(ModelBuilderExtensions.getWebsiteDetails(_context))));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> DBWebsiteList() => Ok(await Task.Run(() => JsonSerialize(_context.Websites, new JsonSerializerSettings() { })));
+        public async Task<IActionResult> DBWebsiteList() => Ok(await Task.Run(() => JsonSerialize(_context.Websites)));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> DBWebsiteDetailsList() => Ok(await Task.Run(() => JsonSerialize(_context.WebsiteDetails, new JsonSerializerSettings() { })));
+        public async Task<IActionResult> DBWebsiteDetailsList() => Ok(await Task.Run(() => JsonSerialize(_context.WebsiteDetails)));
 
-        private string JsonSerialize(object objItem, JsonSerializerSettings jSerializeSettings) => JsonConvert.SerializeObject(objItem, Formatting.Indented, jSerializeSettings);
+        private string JsonSerialize(object objItem) => JsonConvert.SerializeObject(objItem, Formatting.Indented);
+
+        private string JsonSerializeWithSettings(object objItem, JsonSerializerSettings jSerializeSettings) => JsonConvert.SerializeObject(objItem, Formatting.Indented, jSerializeSettings);
 
         private Func<T, T> CreateNewStatement<T>(string fields)
         {
