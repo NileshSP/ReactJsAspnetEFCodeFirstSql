@@ -29,7 +29,7 @@ export class NavMenu extends Component {
             <NavbarBrand className="nav-title" tag={Link} to="/">ReactJs, .Net core(2.2), EF code first & Sql/in-memory</NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-              <ul className="navbar-nav flex-grow" light>
+              <ul className="navbar-nav flex-grow" light="true">
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/" >Home</NavLink>
                 </NavItem>

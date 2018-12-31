@@ -21,7 +21,7 @@ namespace ReactJsAspnetEFSql.Controllers
         }
 
         [HttpGet("[action]/{searchDate?}/{topNumber?}/{columns?}")]
-        public async Task<IActionResult> Index(string columns = "WebsiteId,Url,TotalVisits,VisitDate", string searchDate = null, int? topNumber = null)
+        public async Task<string> Index(string columns = "WebsiteId,Url,TotalVisits,VisitDate", string searchDate = null, int? topNumber = null)
         {
             try
             {
@@ -55,47 +55,44 @@ namespace ReactJsAspnetEFSql.Controllers
                     // eliminate columns with null values for final output
                     var finalResult = JsonSerializeWithSettings(websites, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
 
-                    return Ok(await Task.Run(() => finalResult));
+                    return finalResult.GetAwaiter().GetResult();
                 }
                 else
                 {
-                    return NotFound("search date not valid");
+                    return NotFound("search date not valid").ToString();
                 }
             }
             catch (Exception ex)
             {
-                return NotFound(ex);
+                return NotFound(ex).ToString();
             }
-            //return Ok("");
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetMinMaxDate()
+        public Task<string> GetMinMaxDate()
         {
-            return Ok(await Task.Run(() =>
-            {
-                dynamic dateObject = new JObject();
-                dateObject.minDate = _context.WebsiteDetails.Min(date => date.VisitDate.Date).ToString("yyyy-MM-dd");
-                dateObject.maxDate = _context.WebsiteDetails.Max(date => date.VisitDate.Date).ToString("yyyy-MM-dd");
-                return JsonSerialize(dateObject);
-            }));
+            dynamic dateObject = new JObject();
+            var results = _context.WebsiteDetails.Select(s => s.VisitDate.Date).OrderBy(o => o);
+            dateObject.minDate = results.Take(1).FirstOrDefault().ToString("yyyy-MM-dd");
+            dateObject.maxDate = results.OrderByDescending(o => o).Take(1).FirstOrDefault().ToString("yyyy-MM-dd");
+            return JsonSerialize(dateObject);
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> WebsiteList() => Ok(await Task.Run(() => JsonSerialize(ModelBuilderExtensions.getWebsites())));
+        public Task<string> WebsiteList() => JsonSerialize(ModelBuilderExtensions.getWebsites());
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> WebsiteDetailsList() => Ok(await Task.Run(() => JsonSerialize(ModelBuilderExtensions.getWebsiteDetails(_context))));
+        public Task<string> WebsiteDetailsList() => JsonSerialize(ModelBuilderExtensions.getWebsiteDetails(_context));
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> DBWebsiteList() => Ok(await Task.Run(() => JsonSerialize(_context.Websites)));
+        public Task<string> DBWebsiteList() => JsonSerialize(_context.Websites);
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> DBWebsiteDetailsList() => Ok(await Task.Run(() => JsonSerialize(_context.WebsiteDetails)));
+        public Task<string> DBWebsiteDetailsList() => JsonSerialize(_context.WebsiteDetails);
 
-        private string JsonSerialize(object objItem) => JsonConvert.SerializeObject(objItem, Formatting.Indented);
+        private Task<string> JsonSerialize(object objItem) => Task.Run<string>(() => JsonConvert.SerializeObject(objItem, Formatting.Indented));
 
-        private string JsonSerializeWithSettings(object objItem, JsonSerializerSettings jSerializeSettings) => JsonConvert.SerializeObject(objItem, Formatting.Indented, jSerializeSettings);
+        private Task<string> JsonSerializeWithSettings(object objItem, JsonSerializerSettings jSerializeSettings) => Task.Run<string>(() => JsonConvert.SerializeObject(objItem, Formatting.Indented, jSerializeSettings));
 
         private Func<T, T> CreateNewStatement<T>(string fields)
         {

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore.InMemory;
 using ReactJsAspnetEFSql.Models;
 
 namespace ReactJsAspnetEFSql
@@ -80,7 +79,7 @@ namespace ReactJsAspnetEFSql
             //context.Database.Migrate();
 
             //Populate initial data
-            ModelBuilderExtensions.SeedData(app);
+            context.SeedData().GetAwaiter().GetResult();
         }
     }
 }

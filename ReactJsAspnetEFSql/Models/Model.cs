@@ -5,9 +5,12 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace ReactJsAspnetEFSql.Models
 {
+    public class Model { }
+
     public class WebsitesContext : DbContext
     {
         public WebsitesContext(DbContextOptions<WebsitesContext> options)
@@ -20,44 +23,47 @@ namespace ReactJsAspnetEFSql.Models
 
     public static class ModelBuilderExtensions
     {
-        public static void SeedData(IApplicationBuilder app)
+        public static Task SeedData(this WebsitesContext context)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            return Task.Run(() =>
             {
-                var context = serviceScope.ServiceProvider.GetService<WebsitesContext>();
-                context.Database.EnsureCreated();
+                if (context.Database.IsSqlServer()) context.Database.EnsureCreated(); // For MSSQL only
 
                 if (context.Websites.Any())
                 {
                     //To truncate tables and reseed the identities -- only required few times and not always 
                     context.Websites.RemoveRange(context.Websites);
                     context.SaveChanges();
-                    context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Websites', RESEED, 0)");
-                    context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('WebsiteDetails', RESEED, 0)");
+                    if (context.Database.IsSqlServer()) // For MSSQL only
+                    {
+                        context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('Websites', RESEED, 0)");
+                        context.Database.ExecuteSqlCommand("DBCC CHECKIDENT('WebsiteDetails', RESEED, 0)");
+                    }
                 }
 
                 if (!context.Websites.Any())
                 {
-                    context.Websites.AddRange(getWebsites());
+                    context.Websites.AddRange(getWebsites().GetAwaiter().GetResult());
                     context.SaveChanges();
                 }
                 if (!context.WebsiteDetails.Any())
                 {
-                    context.WebsiteDetails.AddRange(getWebsiteDetails(context));
+                    context.WebsiteDetails.AddRange(getWebsiteDetails(context).GetAwaiter().GetResult());
                     context.SaveChanges();
                 }
-            }
+            });
         }
 
-        public static List<Website> getWebsites() =>
-            "dotnet,webdev,visualstudio,signalr,mobiles,vscode,csharp,visualbasic,mssql,azure,xbox,surfaceproducts,fsharp,office,xamarin"
+        public static Task<List<Website>> getWebsites() =>
+            Task.Run(() => "dotnet,webdev,visualstudio,signalr,mobiles,vscode,csharp,visualbasic,mssql,azure,xbox,surfaceproducts,fsharp,office,xamarin"
                 .Split(",")
                 .Reverse()
                 .Select((item, index) => new Website { Url = $"http://blogs.msdn.com/{item.Trim()}" })
-                .ToList<Website>();
+                .ToList<Website>()
+            );
 
-        public static List<WebsiteDetail> getWebsiteDetails(WebsitesContext context) =>
-            context.Websites
+        public static Task<List<WebsiteDetail>> getWebsiteDetails(WebsitesContext context) =>
+            Task.Run(() => context.Websites
                 .ToList<Website>()
                 .Select((website, index) =>
                     Enumerable.Range(-15, 30)
@@ -65,7 +71,8 @@ namespace ReactJsAspnetEFSql.Models
                     .ToList<WebsiteDetail>()
                 )
                 .SelectMany(websiteDetails => websiteDetails)
-                .ToList<WebsiteDetail>();
+                .ToList<WebsiteDetail>()
+            );
     }
 
     public class Website
