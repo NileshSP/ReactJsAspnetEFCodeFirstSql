@@ -7,6 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using ReactJsAspnetEFSql.Models;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
 
 namespace ReactJsAspnetEFSql
 {
@@ -38,6 +42,9 @@ namespace ReactJsAspnetEFSql
 
             services.AddResponseCaching();
             services.AddResponseCompression();
+            services.AddHealthChecks()
+                    .AddApplicationInsightsPublisher();
+            services.AddHealthChecksUI();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +64,20 @@ namespace ReactJsAspnetEFSql
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            var options = new HealthCheckOptions();
+            options.ResponseWriter = async (c, r) =>
+            {
+                c.Response.ContentType = "application/json";
+
+                var result = JsonConvert.SerializeObject(new
+                {
+                    status = r.Status.ToString(),
+                    errors = r.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() })
+                });
+                await c.Response.WriteAsync(result);
+            };
+            app.UseHealthChecks("/working", options);
+            app.UseHealthChecksUI();
 
             app.UseMvc(routes =>
             {
